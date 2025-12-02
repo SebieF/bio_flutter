@@ -1,3 +1,8 @@
+## 0.0.10
+* Fixing visualizer name in README
+* Adding two (B, O) rare or ambiguous amino acids to nucleotide map
+* Adding getter for z dimension in projection_data
+
 ## 0.0.9
 * (BREAKING) Renaming "UMAP" to more general "Projection" term
 This includes the data class, the visualizer, file handling and test cases
