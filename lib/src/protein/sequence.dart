@@ -25,7 +25,9 @@ abstract class Sequence {
     '*': ['TAA', 'TGA', 'TAG'],
     'X': ['XXX'], // Masked input values
     'U': ['UGA'], // Selenocysteine
-    'Z': ['CAA', 'CAG', 'GAA', 'GAG'] // Placeholder for either Q or E
+    'Z': ['CAA', 'CAG', 'GAA', 'GAG'], // Placeholder for either Q or E
+    'O': ['UAG'], // Pyrrolysine (bacteria/archaea)
+    'B': ['AAT', 'AAC', 'GAT', 'GAC']  // Aspartic acid or Asparagine
   };
 
   final String seq;
