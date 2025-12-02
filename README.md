@@ -17,7 +17,7 @@ Cross-platform representation and visualization of biological data in flutter.
 
 **Widgets**:
 
-* UMAP Visualizer:
+* Projection Data Visualizer:
 
 <img src="https://github.com/SebieF/bio_flutter/blob/v0.0.9/doc/projection_visualizer.gif?raw=true" 
 alt="An animated image of the Projection Visualizer widget" height="398" width="816" title="Projection Visualizer"/>
