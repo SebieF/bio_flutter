@@ -50,6 +50,13 @@ class ProjectionData {
     return coordinates[index].y;
   }
 
+  double? z({required int index}) {
+    if (index < 0 || coordinates.length < index) {
+      return null;
+    }
+    return coordinates[index].z;
+  }
+
   double minX() {
     return coordinates.map((e) => e.x).reduce(min);
   }
@@ -73,6 +80,8 @@ class ProjectionData {
   double maxZ() {
     return coordinates.map((e) => e.z).reduce(max);
   }
+
+  int get dimensions => coordinates.first.length;
 
   /// Function to sort categories with low number of subcategories to the top of the category selection
   ///
