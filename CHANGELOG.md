@@ -1,3 +1,6 @@
+## 0.0.11
+* Improving projection visualizer 2D 
+
 ## 0.0.10
 * Fixing visualizer name in README
 * Adding two (B, O) rare or ambiguous amino acids to nucleotide map
