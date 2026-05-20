@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 @immutable
 class ProjectionVisualizer2D extends StatefulWidget {
+  final String? title;
   final double radius;
 
   final ProjectionData projectionData;
@@ -12,7 +13,12 @@ class ProjectionVisualizer2D extends StatefulWidget {
   final String? pointIdentifierKey;
 
   const ProjectionVisualizer2D(
-      {super.key, required this.projectionData, this.pointData, this.pointIdentifierKey, this.radius = 6.0});
+      {super.key,
+      required this.projectionData,
+      this.pointData,
+      this.pointIdentifierKey,
+      this.radius = 6.0,
+      this.title});
 
   @override
   State<ProjectionVisualizer2D> createState() => _ProjectionVisualizer2DState();
@@ -58,7 +64,7 @@ class _ProjectionVisualizer2DState extends State<ProjectionVisualizer2D> {
 
       int index = 0;
       for (final coordinate in widget.projectionData.coordinates) {
-        String categoryValueOfProtein = widget.pointData![index][_selectedCategory]!;
+        String categoryValueOfProtein = widget.pointData![index][_selectedCategory] ?? 'N/A';
         // Filter invisible categories
         if (_visibleSubCategoriesMap![categoryValueOfProtein] == true) {
           result.add(ScatterSpot(coordinate.x, coordinate.y,
@@ -82,8 +88,19 @@ class _ProjectionVisualizer2DState extends State<ProjectionVisualizer2D> {
     if (_selectedCategory != null) {
       int index = 0;
       for (String categoryValue in _selectableUMAPCategories![_selectedCategory!]!.subCategoriesWithOccurrences.keys) {
-        // TODO Color palette
-        result[categoryValue] = Colors.primaries[index % Colors.primaries.length];
+        final List<Color> pastelColorBlindPalette = [
+          const Color(0xFF4A90E2), // Strong blue
+          const Color(0xFFFF8C42), // Bright orange
+          const Color(0xFF9B59B6), // Rich purple
+          const Color(0xFFE8C547), // Vibrant yellow
+          const Color(0xFF2ECC71), // Bright green
+          const Color(0xFFE74C3C), // Bold red
+          const Color(0xFF5B6DCD), // Deep periwinkle
+          const Color(0xFFD68910), // Golden orange
+          const Color(0xFF3498DB), // Vivid sky blue
+          const Color(0xFF8E44AD), // Deep violet
+        ];
+        result[categoryValue] = pastelColorBlindPalette[index % pastelColorBlindPalette.length];
         index += 1;
       }
     }
@@ -122,27 +139,32 @@ class _ProjectionVisualizer2DState extends State<ProjectionVisualizer2D> {
 
   @override
   Widget build(BuildContext context) {
+    final titleString = widget.title ?? widget.projectionData.identifier;
     return Scaffold(
-      body: DecoratedBox(
-        decoration: BoxDecoration(border: Border.all()),
-        child: Column(
-          children: [
-            Flexible(flex: 1, child: buildCategorySelectionMenu()),
-            Flexible(
-              flex: 4,
-              child: Row(
-                children: [
-                  Flexible(
-                    flex: 3,
-                    fit: FlexFit.loose,
-                    child: buildScatterChart(),
-                  ),
-                  Flexible(flex: 1, child: buildCategoryValueDisplay()),
-                ],
-              ),
+      body: Column(
+        children: [
+          Flexible(
+            flex: 1,
+            child: Text(
+              'Projection: $titleString',
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
-          ],
-        ),
+          ),
+          Flexible(flex: 1, child: buildCategorySelectionMenu()),
+          Flexible(
+            flex: 4,
+            child: Row(
+              children: [
+                Flexible(
+                  flex: 5,
+                  fit: FlexFit.loose,
+                  child: buildScatterChart(),
+                ),
+                Flexible(flex: 1, child: buildCategoryValueDisplay()),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -183,7 +205,7 @@ class _ProjectionVisualizer2DState extends State<ProjectionVisualizer2D> {
     List<ScatterSpot> scatterSpots = scatterSpotsFromUmapData();
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(8.0),
       child: ScatterChart(
         ScatterChartData(
             scatterSpots: scatterSpots,
@@ -192,19 +214,18 @@ class _ProjectionVisualizer2DState extends State<ProjectionVisualizer2D> {
             minY: minY,
             maxY: maxY,
             borderData: FlBorderData(
-              show: true,
+              show: false,
             ),
             gridData: const FlGridData(
               show: true,
             ),
-            titlesData: FlTitlesData(
-                show: true,
-                leftTitles: AxisTitles(
-                    sideTitles: SideTitles(reservedSize: 50, showTitles: true, interval: axisIntervalVertical)),
-                rightTitles: const AxisTitles(sideTitles: SideTitles(reservedSize: 0, showTitles: false)),
-                bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(reservedSize: 50, showTitles: true, interval: axisIntervalHorizontal)),
-                topTitles: const AxisTitles(sideTitles: SideTitles(reservedSize: 0, showTitles: false))),
+            titlesData: const FlTitlesData(
+              show: true,
+              leftTitles: AxisTitles(axisNameWidget: Text("Dim 2")),
+              bottomTitles: AxisTitles(axisNameWidget: Text("Dim 1")),
+              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            ),
             showingTooltipIndicators: _selectedSpots,
             scatterTouchData: ScatterTouchData(
               enabled: true,
