@@ -1,3 +1,6 @@
+## 0.0.12
+* Bumping fl_chart version
+
 ## 0.0.11
 * Improving projection visualizer 2D 
 
